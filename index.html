@@ -18,17 +18,18 @@
             align-items: center;
             flex-direction: column;
             justify-content: center;
-            height: 70%; /* This ensures the .maindiv takes up the full height of the viewport */
+            height: 100vh; /* Use full viewport height */
         }
         
         .insider {
             background-color: #fff; /* White background */
             border: 1px solid #ddd; /* Light gray border */
             padding: 20px;
-            margin-bottom: 7%;
+            margin-bottom: 5%; /* Adjusted for mobile view */
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
-            width: 400px; /* Set a fixed width to prevent the div from collapsing */
+            width: 90%; /* Adjust width for mobile */
+            max-width: 400px; /* Maximum width */
         }
         
         label {
@@ -38,13 +39,13 @@
         }
         
         input[type="text"] {
-            width: 100%;
+            width: calc(100% - 22px); /* Adjust width to account for padding and border */
             height: 40px;
             padding: 10px;
             font-size: 16px;
             border: 1px solid #ccc;
             border-radius: 5px;
-            margin-right: 20px; /* Add a right margin to prevent the textbox from collapsing with the div border */
+            margin-right: 0; /* Remove margin for mobile */
             box-sizing: border-box; /* Ensure the width includes the padding and border */
         }
         
@@ -55,7 +56,8 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            margin-top: 5px;
+            margin-top: 10px; /* Adjusted for mobile view */
+            width: 100%; /* Full width for mobile */
         }
         
         button:hover {
@@ -75,17 +77,21 @@
             font-size: 18px;
             font-weight: bold;
             margin-top: 20px;
+            word-wrap: break-word; /* Ensure long URLs wrap */
         }
         
         .copy-button {
             background-color: #337ab7; /* Blue background */
             color: #fff;
             padding: 10px 20px;
-
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            margin-left: 10px;
+            margin-left: 0; /* Remove margin for mobile */
+            width: 100%; /* Full width for mobile */
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         
         .copy-button:hover {
@@ -98,23 +104,39 @@
             margin-right: 10px;
             vertical-align: middle;
         }
-        h1{
+        
+        h1 {
             text-align: center;
-            margin-bottom: 7%;
+            margin-bottom: 20px; /* Adjusted for mobile view */
+        }
+
+        /* Media query for smaller screens */
+        @media (max-width: 600px) {
+            .insider {
+                width: 90%; /* Ensure container fits on smaller screens */
+            }
+            
+            button {
+                font-size: 14px; /* Adjust font size for buttons */
+            }
+            
+            .result {
+                font-size: 16px; /* Adjust font size for result */
+            }
         }
     </style>
 </head>
 <body>
     
     <div class="maindiv">
-        <h1>URL SHORTNER</h1>
+        <h1>URL SHORTENER</h1>
         <div class="insider">
             <label for="original">Enter the URL (use https:// before)</label>
             <input id="original" type="text">
-            <button onclick="caller()">Short Url</button>
-            <p class="result">Your Shorted Url is: <a id="result" target="_blank" rel="noopener noreferrer"></a>
+            <button onclick="caller()">Short URL</button>
+            <p class="result">Your Shortened URL is: <a id="result" target="_blank" rel="noopener noreferrer"></a>
                 <button class="copy-button" onclick="copyUrl()">
-                    <i class="far fa-copy"></i>
+                    <i class="far fa-copy copy-image"></i> Copy URL
                 </button>
             </p>
         </div>
@@ -124,7 +146,7 @@
         function caller() {
             var url = document.getElementById("original").value;
             var short = document.getElementById("result");
-            var apiurl = 'https://ue.up.railway.app/shorten/' + url;
+            var apiurl = 'https://ue.up.railway.app/shorten/' + encodeURIComponent(url);
             
             fetch(apiurl)
                 .then(response => response.json())
@@ -132,7 +154,7 @@
                     short.href = data.shortened_url;
                     short.innerHTML = data.shortened_url;
                 })
-                .catch(error => console.error('error: ', error));
+                .catch(error => console.error('Error:', error));
         }
         
         function copyUrl() {
@@ -146,4 +168,5 @@
             alert("URL copied to clipboard!");
         }
     </script>
+</body>
 </html>
